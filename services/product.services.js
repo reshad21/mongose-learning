@@ -23,3 +23,46 @@ exports.updateProductService = async (productId, data) => {
 
     return result;
 }
+
+
+exports.bulkUpdateProductService = async (data) => {
+    // console.log(data);
+    // {
+    //     "ids": [
+    //       "64b6415764ad171a54e69a78",
+    //       "64b6508f4f11a12684c957de"
+    //     ],
+    //     "data": {
+    //       "price": 150
+    //     }
+    // }
+    // const result = await Product.updateMany({ _id: data.ids }, data.data, { runValidators: true });
+
+
+
+
+    // {
+    //     "ids": [
+    //       {
+    //         "id": "64b6508f4f11a12684c957de",
+    //         "data": {
+    //           "price": 50
+    //         }
+    //       },
+    //       {
+    //         "id": "64b6415764ad171a54e69a78",
+    //         "data": {
+    //           "price": 250
+    //         }
+    //       }
+    //     ]
+    // }
+    const products = [];
+
+    data.ids.forEach(product => {
+        products.push(Product.updateOne({ _id: product.id }, product.data))
+    })
+
+    const result = await Promise.all(products);
+    return result;
+}
