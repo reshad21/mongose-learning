@@ -1,4 +1,5 @@
 const Product = require("../models/Product.js");
+const { getProductService, createProductService } = require("../services/product.services.js");
 
 
 exports.createProduct = async (req, res) => {
@@ -15,13 +16,15 @@ exports.createProduct = async (req, res) => {
 
 
         // when we use create or save system?
-        const product = new Product(req.body);
+        // const product = new Product(req.body);
 
-        if (product.quantity == 0) {
-            product.status = "out-of-stock";
-        }
+        // if (product.quantity == 0) {
+        //     product.status = "out-of-stock";
+        // }
 
-        const result = await product.save();
+        // const result = await product.save();
+
+        const result = await createProductService(req.body);
 
         res.status(200).json({
             status: 'Success',
@@ -49,11 +52,12 @@ exports.getProduct = async (req, res) => {
         //   .where("quantity").gt(100).lt(600)
         //   .limit(2).sort({ quantity: -1 });
 
-        const result = await Product.findById('64b6415764ad171a54e69a78');
+        // const result = await Product.findById('64b6415764ad171a54e69a78');
+        const products = await getProductService();
 
         res.status(200).json({
             status: 'success',
-            data: result
+            data: products
         })
 
     } catch (error) {
