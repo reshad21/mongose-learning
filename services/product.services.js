@@ -11,7 +11,15 @@ exports.createProductService = async (data) => {
     return product;
 }
 
-exports.updateProductService = async (id, body) => {
-    const product = await Product.updateOne({ _id: id }, { $set: body });
-    return product;
+exports.updateProductService = async (productId, data) => {
+    // new system
+    // const result = await Product.updateOne({ _id: productId }, { $set: data }, { runValidators: true });
+
+    // old way
+    // const product = await Product.findById(productId);
+    // const result = await product.set(data).save();
+
+    const result = await Product.updateOne({ _id: productId }, { $inc: data }, { runValidators: true })
+
+    return result;
 }
