@@ -1,5 +1,5 @@
 const Product = require("../models/Product.js");
-const { getProductService, createProductService, updateProductService, bulkUpdateProductService } = require("../services/product.services.js");
+const { getProductService, createProductService, updateProductService, bulkUpdateProductService, deleteProductByIdService, bulkDeleteProductService } = require("../services/product.services.js");
 
 
 exports.createProduct = async (req, res) => {
@@ -95,13 +95,63 @@ exports.bulkUpdateProduct = async (req, res) => {
 
         res.status(200).json({
             status: 'Success',
-            data: result
+            message: 'Successfully updated the given products',
         })
 
     } catch (error) {
         res.status(400).json({
             status: 'fail',
             message: 'Not updating the product',
+            error: error.message
+        })
+    }
+}
+
+
+exports.deleteProductById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await deleteProductByIdService(id);
+
+        console.log(result);
+        // jodi amra vul kore amon kono  id dai jata amder database a exists kore na
+        //jkono  false[0,null,false,] value korber jonno amra ! simbole use kori
+        if (!result.deletedCount) {
+            return res.status(400).json({
+                status: 'fail',
+                message: "Couldn't delete the product"
+            })
+        }
+
+        res.status(200).json({
+            status: 'Success',
+            message: 'Successfully delete the product',
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            status: 'fail',
+            message: 'Not deleting the product',
+            error: error.message
+        })
+    }
+}
+
+exports.bulkDeleteProduct = async (req, res) => {
+    // console.log(req.body);
+    try {
+        const { id } = req.params;
+        const result = await bulkDeleteProductService(req.body.ids);
+
+        res.status(200).json({
+            status: 'Success',
+            message: 'Successfully deleted the given products',
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            status: 'fail',
+            message: 'Not deleting the products',
             error: error.message
         })
     }
